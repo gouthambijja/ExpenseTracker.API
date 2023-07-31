@@ -16,7 +16,7 @@ namespace ExpenseTrackerLogicLayer.Models
 
         public string? GoogleId { get; set; }
 
-        public string PhoneNumber { get; set; } = null!;
+        public string? PhoneNumber { get; set; } = null!;
 
         public byte[]? ProfileImg { get; set; }
 
@@ -28,11 +28,11 @@ namespace ExpenseTrackerLogicLayer.Models
 
         public bool? IsActive { get; set; }
 
-        public bool IsPermanentDelete { get; set; }
+        public bool? IsPermanentDelete { get; set; }
 
-        public string SecurityQuestion { get; set; } = null!;
+        public string? SecurityQuestion { get; set; } = null!;
 
-        public string SecurityAnswer { get; set; } = null!;
+        public string? SecurityAnswer { get; set; } = null!;
 
         public string? Password { get; set; }
 

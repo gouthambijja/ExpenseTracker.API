@@ -13,5 +13,7 @@ namespace ExpenseTracker.DAL.Contracts
         Task<(bool isSuccess, string ErrorMsg)> IsUserEmailExists(string? userEmail);
         Task<(bool isExists, string ErrorMsg)> IsUserExists(string name,string email);
         Task<(User? user,string ErrorMsg)> GetUserById(Guid UserId);
+        Task<(bool isExist, string ErrorMsg)> IsGoogleIdExist(string googleId);
+
     }
 }

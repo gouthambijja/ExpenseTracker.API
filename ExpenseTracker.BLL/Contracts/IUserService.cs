@@ -11,6 +11,7 @@ namespace ExpenseTrackerLogicLayer.Contracts
         Task<(BLUser? user, string ErrorMsg)> Get(LoginModel loginModel);
         Task<(BLUser? user, string ErrorMsg)> GetUserById(Guid UserId);
         Task<(bool isSuccess, string ErrorMsg)> ChangePassword(Guid CredentialId, string OldPassword, string NewPassword);
-        Task<(bool isExist,string ErrorMsg)> IsUserExist(string name,string email);  
+        Task<(bool isExist,string ErrorMsg)> IsUserExist(string name,string email);
+        Task<(bool isExist, string ErrorMsg)> IsGoogleIdExist(string googleId);
     }
 }

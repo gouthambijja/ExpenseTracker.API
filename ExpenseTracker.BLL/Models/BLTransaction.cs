@@ -9,7 +9,7 @@ namespace ExpenseTrackerLogicLayer.Models
 {
     public class BLTransaction
     {
-        public Guid TransactionId { get; set; }
+        public Guid? TransactionId { get; set; }
 
         public string? Name { get; set; }
 

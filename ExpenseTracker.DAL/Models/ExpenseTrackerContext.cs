@@ -83,8 +83,6 @@ public partial class ExpenseTrackerContext : DbContext
 
             entity.HasIndex(e => e.UserEmail, "UQ__Users__08638DF86ABC5116").IsUnique();
 
-            entity.HasIndex(e => e.UserName, "UQ__Users__C9F28456DB40F5BF").IsUnique();
-
             entity.Property(e => e.UserId).HasDefaultValueSql("(newid())");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")

@@ -30,7 +30,7 @@ namespace ExpenseTracker.WEBAPI.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> Add(BLCategory category)
+        public async Task<IActionResult> Add(BLCategory? category)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace ExpenseTracker.WEBAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPost("Delete")]
+        [HttpDelete("{id:Guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try
@@ -53,6 +53,20 @@ namespace ExpenseTracker.WEBAPI.Controllers
                 return Ok(response.category);
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpPut]
+        public async Task<IActionResult> Update(BLCategory? category)
+        {
+            try
+            {
+                var response = await _categoryService.Update(category);
+                if (response.category == null) return BadRequest(response.ErrorMsg);
+                return Ok(response.category);
+            }
+            catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }

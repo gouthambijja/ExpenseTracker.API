@@ -54,5 +54,18 @@ namespace ExpenseTrackerLogicLayer.Services
                 return (null, ex.Message);
             }
         }
+
+        public async Task<(BLCategory? category, string ErrorMsg)> Update(BLCategory? category)
+        {
+            try
+            {
+                var _category = await _categoryRepository.Update(mapper.Map<Category>(category));
+                return (mapper.Map<BLCategory>(_category.category), "");
+            }
+            catch(Exception ex)
+            {
+                return (null, ex.Message);
+            }
+        }
     }
 }

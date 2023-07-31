@@ -80,6 +80,11 @@ namespace ExpenseTrackerLogicLayer.Services
             
         }
 
+        public async Task<(bool isExist, string ErrorMsg)> IsGoogleIdExist(string googleId)
+        {
+            return await _userRepository.IsGoogleIdExist(googleId);
+        }
+
         public async Task<(bool isExist, string ErrorMsg)> IsUserExist(string name, string email)
         {
             return await _userRepository.IsUserExists(name, email);

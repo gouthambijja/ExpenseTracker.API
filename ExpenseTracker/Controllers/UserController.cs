@@ -28,15 +28,29 @@ namespace ExpenseTracker.WEBAPI.Controllers
             _authController = authController;
         }
         [HttpPost("Register")]
-        public async Task<IActionResult> RegisterUser(BLUser user)
+        public async Task<IActionResult> RegisterUser()
         {
             try
             {
+                var image = Request.Form.Files[0];
+
+                var memoryStream = new MemoryStream();
+                await image.CopyToAsync(memoryStream);
+                var imageBody = memoryStream.ToArray();
+
+                var user = new BLUser();
+                user.ProfileImg = imageBody;
+                user.UserName = Request.Form["Name"];
+                user.UserEmail = Request.Form["Email"];
+                user.PhoneNumber = Request.Form["PhoneNumber"];
+                user.SecurityQuestion = Request.Form["SecurityQuestion"];
+                user.SecurityAnswer = Request.Form["SecurityAnswer"];
+                user.Password = Request.Form["Password"];
+
                 var User = await _userService.IsUserExist(name: user.UserName, email: user.UserEmail);
                 Console.WriteLine(User.isExist);
                 if (User.isExist == false)
                 {
-                    Console.WriteLine("hey");
                     user.Password = Utility.Encrypt(user.Password);
                     var response = await _userService.Add(user);
                     if (response.user == null)
@@ -57,11 +71,9 @@ namespace ExpenseTracker.WEBAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-
-
         }
         [HttpPost("login")]
-        public async Task<IActionResult> LoginUser(LoginModel LoginUser)
+        public async Task<IActionResult> LoginUser(LoginModel? LoginUser)
         {
             try
             {
@@ -89,15 +101,50 @@ namespace ExpenseTracker.WEBAPI.Controllers
             }
 
         }
-
-        [HttpGet("IsUserExists")]
-        public async Task<IActionResult> IsUserExists(string? Username, string? email)
+        [AllowAnonymous]
+        [HttpPost("GoogleSignIn")]
+        public async Task<IActionResult> GoogleSignUp([FromBody] BLUser? user)
         {
             try
             {
-                var response = await _userService.IsUserExist(Username, email);
-                if (response.isExist) return Ok(response.isExist);
-                else return BadRequest(response.ErrorMsg);
+                user.Password = user.GoogleId;
+                var response = await _userService.IsGoogleIdExist(user.GoogleId);
+                if (response.isExist == true)
+                {
+                    return await LoginUser(new() { UserEmail = user.UserEmail, Password = user.Password });
+
+                }
+                else
+                {
+                     var Password = Utility.Encrypt(user.Password);
+                    var _user = await _userService.Add(new BLUser()
+                    {
+                        PhoneNumber = "",
+                        UserEmail = user.UserEmail,
+                        UserName = user.UserName,
+                        GoogleId = user.GoogleId,
+                        Password = Password,
+                        SecurityQuestion = "",
+                        SecurityAnswer = ""
+                    });
+                    return await LoginUser(new() { UserEmail = user.UserEmail, Password = user.Password });
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("IsUserExists")]
+        public async Task<IActionResult> IsUserExists(string? email)
+        {
+            try
+            {
+                var response = await _userService.IsUserExist("", email);
+                Console.WriteLine(response.ErrorMsg);
+                return Ok(response.isExist);
             }
             catch (Exception ex)
             {
@@ -105,7 +152,7 @@ namespace ExpenseTracker.WEBAPI.Controllers
             }
         }
         [Authorize]
-        [HttpGet("GetUserById")]
+        [HttpGet("GetUserById/{userId:Guid}")]
         public async Task<IActionResult> GetuserById(Guid userId)
         {
             try

@@ -11,7 +11,7 @@ namespace ExpenseTracker.DAL.Repositories
         {
             Context = userDbContext;
         }
-        public async Task<(User? user,string ErrorMsg)> Add(User user)
+        public async Task<(User? user, string ErrorMsg)> Add(User user)
         {
 
             try
@@ -46,7 +46,7 @@ namespace ExpenseTracker.DAL.Repositories
         //    }
         //}
 
-        public async Task<(User? user,string ErrorMsg)> Delete(Guid UserId)
+        public async Task<(User? user, string ErrorMsg)> Delete(Guid UserId)
         {
             throw new NotImplementedException();
         }
@@ -78,7 +78,7 @@ namespace ExpenseTracker.DAL.Repositories
                 return (false, ex.Message);
             }
         }
-        public async Task<(User? user,string ErrorMsg)> GetUserById(Guid UserId)
+        public async Task<(User? user, string ErrorMsg)> GetUserById(Guid UserId)
         {
             var _user = await Context.Users.Where(u => u.UserId == UserId).FirstOrDefaultAsync();
             if (_user == null) return (null, "User not Exist");
@@ -117,7 +117,7 @@ namespace ExpenseTracker.DAL.Repositories
             }
         }
 
-        public async  Task<(User? user, string ErrorMsg)> GetuserByEmail(string userEmail)
+        public async Task<(User? user, string ErrorMsg)> GetuserByEmail(string userEmail)
         {
             try
             {
@@ -140,7 +140,27 @@ namespace ExpenseTracker.DAL.Repositories
                 if (user != null) return (true, "");
                 else return (false, "User Didn't Exist");
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+
+        public async Task<(bool isExist, string ErrorMsg)> IsGoogleIdExist(string googleId)
+        {
+            try
+            {
+                var user =  await Context.Users.FirstOrDefaultAsync(e => e.GoogleId == googleId);
+                if(user == null)
+                {
+                    return (false, "Googleid doesn't exists");
+                }
+                else
+                {
+                    return (true, "");
+                }
+            }
+            catch (Exception ex)
             {
                 return (false, ex.Message);
             }
