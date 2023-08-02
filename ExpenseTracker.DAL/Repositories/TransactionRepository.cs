@@ -104,7 +104,7 @@ namespace ExpenseTracker.DAL.Repositories
             try
             {
                 var _Transactions = await Context.Transactions
-                    .Where(e => e.UserId == UserId && e.IsActive == true).OrderByDescending(e => e.Date).ToListAsync();
+                    .Where(e => e.UserId == UserId && e.IsActive == true).OrderByDescending(e => e.UpdatedAt).ToListAsync();
                 Console.WriteLine(_Transactions.Count());
                 return (_Transactions, "");
             }
@@ -165,7 +165,7 @@ namespace ExpenseTracker.DAL.Repositories
                 _Transaction.Name = transaction.Name;
                 _Transaction.Description = transaction.Description;
                 _Transaction.Amount = transaction.Amount;
-                _Transaction.Category = transaction.Category;
+                _Transaction.CategoryId = transaction.CategoryId;
                 _Transaction.Date = transaction.Date;
                 _Transaction.UpdatedAt = DateTime.Now;
                 await Context.SaveChangesAsync();

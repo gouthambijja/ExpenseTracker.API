@@ -52,7 +52,7 @@ namespace ExpenseTracker.DAL.Repositories
             try
             {
                 var List = await Context.Categories.
-                Where(e => e.UserId == UserId && e.IsActive == true).ToListAsync();
+                Where(e => e.UserId == UserId && e.IsActive == true).OrderByDescending(e => e.UpdatedAt).ToListAsync();
                 if (List.Count == 0) return (null, "No Categories present");
                 else return (List, "");
             }

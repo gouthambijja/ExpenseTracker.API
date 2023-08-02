@@ -22,6 +22,8 @@ public partial class ExpenseTrackerContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<UserCredential> UserCredentials { get; set; }
+    
+    public virtual DbSet<DefaultCategory> DefaultCategories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -45,6 +47,22 @@ public partial class ExpenseTrackerContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Categories)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_Category_UserId");
+        });
+        modelBuilder.Entity<DefaultCategory>(entity =>
+        {
+            entity.HasKey(e => e.CategoryId).HasName("PK__DefaultCategory__19093A0BB1B9C24C");
+
+            entity.ToTable("DefaultCategory");
+
+            entity.Property(e => e.CategoryId).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+            entity.Property(e => e.Name).HasMaxLength(255);
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
         });
 
         modelBuilder.Entity<Transaction>(entity =>

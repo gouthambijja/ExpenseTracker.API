@@ -9,11 +9,13 @@ namespace ExpenseTrackerLogicLayer.Services
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IDefaultCategoryRepository _defaultCategoryRepository;
         Mapper mapper = AutoMappers.InitializeAutoMapper();
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository,IDefaultCategoryRepository defaultCategoryRepository)
         {
             _categoryRepository = categoryRepository;
+            _defaultCategoryRepository = defaultCategoryRepository;
         }
 
         public async Task<(BLCategory category,string ErrorMsg)> Add(BLCategory category)
@@ -46,8 +48,22 @@ namespace ExpenseTrackerLogicLayer.Services
         {
             try
             {
-                var categories = await _categoryRepository.Get(UserId);
-                return (mapper.Map<List<BLCategory>>(categories.Item1), categories.ErrorMsg);
+                var categoriesResponse = await _categoryRepository.Get(UserId);
+                var categories = mapper.Map<List<BLCategory>>(categoriesResponse.Item1);
+                var defaultCategories = await _defaultCategoryRepository.Get();
+                for(var i = 0; i < defaultCategories.Count; i++)
+                {
+                    var category = new BLCategory()
+                    {
+                        CategoryId = defaultCategories[i].CategoryId,
+                        Name = defaultCategories[i].Name,
+                        CreatedAt = defaultCategories[i].CreatedAt,
+                        UpdatedAt = defaultCategories[i].UpdatedAt,
+                        IsActive = defaultCategories[i].IsActive,
+                    };
+                    categories.Add(category);
+                }
+                return (categories, categoriesResponse.ErrorMsg);
             }
             catch(Exception ex)
             {

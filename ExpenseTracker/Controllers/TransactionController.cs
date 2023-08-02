@@ -61,7 +61,7 @@ namespace ExpenseTracker.WEBAPI.Controllers
             }
         }
         [HttpPost("AddTransactions")]
-        public async Task<IActionResult> Post(List<BLTransaction> transactions)
+        public async Task<IActionResult> Post(List<BLTransaction>? transactions)
         {
             try
             {

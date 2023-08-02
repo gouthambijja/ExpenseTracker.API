@@ -18,6 +18,7 @@ namespace ExpenseTracker.DAL
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IDefaultCategoryRepository, DefaultCategoryRepository>();
         }
     }
 }
