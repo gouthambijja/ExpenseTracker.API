@@ -9,7 +9,7 @@ public partial class Category
 
     public string? Name { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid? UserId { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
